@@ -28,6 +28,13 @@ const diasLaboradosController=require('./routes/DiasLaborados.js')
 const costalesController=require('./routes/costales.js')
 const mantemientoController=require('./routes/Mantenimiento.js')
 
+
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync("/home/jenryeduardo/Descargas/api.pem")
+  };
 // Usar rutas o uris
 //son direcciones que nos llevan hacia los metodos de una entidad esto
 // es una uri (/api)
@@ -47,7 +54,6 @@ app.use('/api/mantenimiento',mantemientoController);
 // Iniciar servidor
 //que el serividor siempre este activo
 //en que puerto se esta ejecutando
-app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
-});
-
+https.createServer(options, app).listen(3000, () => {
+  console.log('Servidor HTTPS corriendo en el puerto 3000');
+  });
