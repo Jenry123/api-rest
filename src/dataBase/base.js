@@ -3,9 +3,9 @@ require('dotenv').config();
 
 // Configuración de la conexión a la base de datos MySQL
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "l0p3z2005",
+  host: "admin.cwwebdorxcak.us-east-1.rds.amazonaws.com",
+  user: "admin",
+  password: "233431amilcareduardo",
   database: "tortilleria_2"
 });//todo esto crea la conexión a la base de datos
 
