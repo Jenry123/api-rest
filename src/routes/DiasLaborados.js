@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const diasLaboradosController = require('../controllers/DiasLaborados');
+const diasLaboradosController = require('../controllers/DiasLaborados.js');
 
 // Rutas para los endpoints CRUD de Días Laborados
-router.post('/', diasLaboradosController.agregarDiaLaborado);
-router.get('/', diasLaboradosController.obtenerTodosDiasLaborados);
-router.put('/:id', diasLaboradosController.actualizarDiaLaborado);
-router.delete('/:id', diasLaboradosController.eliminarDiaLaborado);
+router.post('/', diasLaboradosController.addDias);
+router.get('/', diasLaboradosController.getAllDiasLab);
+
 
 module.exports = router;
+    

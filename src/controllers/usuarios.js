@@ -1,13 +1,11 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const authenticateJWT=require('./token/authMiddleware')
+const authenticateJWT = require('./token/authMiddleware');
 const db = require('../dataBase/base');
 
-
-
 // Agregar un nuevo usuario
-exports.addUser =[authenticateJWT, (req, res) => {
+exports.addUser =  (req, res) => {
   const newUser = req.body;
   bcrypt.hash(newUser.pass, 10, (err, hash) => {
     if (err) {
@@ -17,7 +15,8 @@ exports.addUser =[authenticateJWT, (req, res) => {
       return;
     }
     newUser.pass = hash;
-    db.query('INSERT INTO Usuarios(nombre,apellidos,estado_civil,edad,sexo,email,pass,telefono,id_rol) VALUES(?,?,?,?,?,?,?,?,?)',[newUser.nombre,newUser.apellidos,newUser.estado_civil,newUser.edad,newUser.sexo,newUser.email,newUser.pass,newUser.telefono,newUser.id_rol],
+    db.query('INSERT INTO Usuarios(nombre,apellidos,estado_civil,edad,sexo,email,pass,telefono,fecha_ingreso,sueldo_semanal,id_rol) VALUES(?,?,?,?,?,?,?,?,?,?,?)',
+      [newUser.nombre, newUser.apellidos, newUser.estado_civil, newUser.edad, newUser.sexo, newUser.email, newUser.pass, newUser.telefono,newUser.fecha_ingreso,newUser.sueldo_semanal, newUser.id_rol],
       (error, result) => {
         if (error) {
           if (!res.headersSent) {
@@ -29,10 +28,11 @@ exports.addUser =[authenticateJWT, (req, res) => {
         if (!res.headersSent) {
           res.status(201).send('Nuevo usuario agregado correctamente');
         }
-      });
+      }
+    );
   });
-}];
-  
+};
+
 // Función para el login de usuarios
 exports.login = async (req, res) => {
   const { email, pass } = req.body;
@@ -50,17 +50,13 @@ exports.login = async (req, res) => {
       return res.status(401).send('Credenciales inválidas');
     }
 
-
-    const token = jwt.sign({ id: user.id_Usuario },process.env.JWT_SECRET, { expiresIn: '16h' });
-    res.json({ token });
-    
+    const token = jwt.sign({ id: user.id_Usuario }, process.env.JWT_SECRET, { expiresIn: '16h' });
+    res.json({ token, id_rol: user.id_rol });
   });
 };
 
-
 // Middleware de autenticación
-
-exports.updateUser =[authenticateJWT, (req, res) => {
+exports.updateUser = [authenticateJWT, (req, res) => {
   const userId = req.params.id;
   const updatedUser = req.body;
   db.query('UPDATE Usuarios SET ? WHERE id_usuario = ?', [updatedUser, userId], (err, result) => {
@@ -85,7 +81,7 @@ exports.deleteUser = [authenticateJWT, (req, res) => {
 }];
 
 // Obtener todos los usuarios
-exports.getAllUsers = [authenticateJWT,(req, res) => {
+exports.getAllUsers = [authenticateJWT, (req, res) => {
   db.query('SELECT * FROM Usuarios', (err, result) => {
     if (err) {
       res.status(500).send('Error al obtener los usuarios');
